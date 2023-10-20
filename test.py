@@ -12,6 +12,7 @@ from torch import nn
 
 
 nvmlInit()
+gpu_idx = 0
 
 
 class Logger: 
@@ -28,9 +29,9 @@ class Logger:
         self.file.flush()
 
 def get_gpu_utilization():
-    handle = nvmlDeviceGetHandleByIndex(0)
+    handle = nvmlDeviceGetHandleByIndex(gpu_idx)
     nvsmi = nvidia_smi.getInstance()
-    return nvsmi.DeviceQuery()["gpu"][0]
+    return nvsmi.DeviceQuery()["gpu"][gpu_idx]
 
 
 
@@ -65,8 +66,8 @@ def run_stress_test(device="cuda"):
 if __name__ == "__main__":
 
     nvsmi = nvidia_smi.getInstance() 
-    pprint(nvsmi.DeviceQuery()["gpu"][0])
-    filename = nvsmi.DeviceQuery()["gpu"][0]["product_name"] + ".csv"
+    pprint(nvsmi.DeviceQuery()["gpu"][gpu_idx])
+    filename = nvsmi.DeviceQuery()["gpu"][gpu_idx]["product_name"] + ".csv"
     logger = Logger(filename)
     sys.stdout = logger 
 
